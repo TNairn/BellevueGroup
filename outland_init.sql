@@ -32,12 +32,11 @@ CREATE TABLE Location (
 -- Create Inventory table
 CREATE TABLE Inventory ( 
 
-    inventory_id    INT  NOT NULL  AUTO_INCREMENT,
     category    VARCHAR(50)  NOT NULL,
     quantity    INT  NOT NULL,
     total_sales    INT,
     
-    PRIMARY KEY(inventory_id)
+    PRIMARY KEY(category)
 
 );
 
@@ -88,13 +87,13 @@ CREATE TABLE Equipment (
     equipment_name    VARCHAR(100)  NOT NULL,
     type    VARCHAR(6),
     purchase_date    DATE  NOT NULL,
-    inventory_id    INT  NOT NULL,
+    category    VARCHAR(50)  NOT NULL,
     
     PRIMARY KEY(equipment_id),
     
     CONSTRAINT fk_inventory
-    FOREIGN KEY (inventory_id)
-        REFERENCES Inventory(inventory_id) 
+    FOREIGN KEY (category)
+        REFERENCES Inventory(category) 
 
 );
 
@@ -165,35 +164,61 @@ INSERT INTO Employee (employee_name, job_title, employee_visa, employee_passport
 -- Insert data into Trip table
 INSERT INTO Trip (trip_type, start_date, end_date, number_of_bookings, location_id, employee_id)
     VALUES  
-    ('Camping', '2022-04-08', '2022-04-23', 12, 1, 3),
-    ('Hiking', '2022-04-29', '2022-05-14', 21, 2, 4),
-    ('Hiking', '2022-05-27', '2022-06-11', 25, 3, 4),
-    ('Camping', '2022-09-02', '2022-09-17', 7, 4, 3),
-    ('Camping', '2022-09-30', '2022-10-15', 12, 5, 3),
-    ('Hiking', '2022-10-28', '2022-11-12', 17, 6, 4),
-    ('Hiking', '2023-04-07', '2023-04-22', 10, 1, 4),
-    ('Camping', '2023-05-05', '2023-05-20', 17, 2, 3),
-    ('Hiking', '2023-10-02', '2023-10-17', 18, 5, 4); 
+    ('Camping', '2022-04-08', '2022-04-23', 12,
+        (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Spring'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        
+    ('Hiking', '2022-04-29', '2022-05-14', 21,
+        (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Spring'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        
+    ('Hiking', '2022-05-27', '2022-06-11', 25,
+        (SELECT location_id FROM Location WHERE location_name = 'Europe'        AND season = 'Spring'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        
+    ('Camping', '2022-09-02', '2022-09-17', 7,
+        (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Fall'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        
+    ('Camping', '2022-09-30', '2022-10-15', 12,
+        (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Fall'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        
+    ('Hiking', '2022-10-28', '2022-11-12', 17,
+        (SELECT location_id FROM Location WHERE location_name = 'Europe'        AND season = 'Fall'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+    
+    ('Hiking', '2023-04-07', '2023-04-22', 10,
+        (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Spring'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+    
+    ('Camping', '2023-05-05', '2023-05-20', 17,
+        (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Spring'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        
+    ('Hiking', '2023-10-02', '2023-10-17', 18,
+        (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Fall'),
+        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide'));
 
 
 -- Insert data into Equipment table  
-INSERT INTO Equipment (equipment_name, type, purchase_date, inventory_id)
+INSERT INTO Equipment (equipment_name, type, purchase_date, category)
     VALUES
-    ('Tent', 'Rental', '2019-06-27', 1),
-    ('Ruck Sack', 'Rental', '2021-06-26', 2),
-    ('Camel Back', NULL, '2022-06-25', 2),
-    ('Walking Cane', 'Rental', '2022-06-25', 5),
-    ('Rain Jacket', NULL, '2019-06-27', 3),
-    ('Rain Slacks', 'Rental', '2019-06-27', 4),
-    ('Sleeping Bag', 'Rental', '2017-06-29', 6); 
+    ('Tent', 'Rental', '2019-06-27', 'Tents'),
+    ('Ruck Sack', 'Rental', '2021-06-26', 'Backpacks'),
+    ('Camel Back', NULL, '2022-06-25', 'Backpacks'),
+    ('Walking Cane', 'Rental', '2022-06-25', 'Hiking Gear'),
+    ('Rain Jacket', NULL, '2019-06-27', 'Jackets'),
+    ('Rain Slacks', 'Rental', '2019-06-27', 'Pants'),
+    ('Sleeping Bag', 'Rental', '2017-06-29', 'Sleeping Gear'); 
 
 
 -- Insert data into Customer table
 INSERT INTO Customer (first_name, last_name, email, phone, address, visa_status, passport_status, airfare_status, equipment_id, trip_id)
     VALUES
     ('Randy', 'Miles', 'rmiles@duelue.com', '1(555)987-6543', '123 Blanc Ave., Huntsville, Alabama, 00000', 'Valid', 'Valid', 'Scheduled', 3, 7),
-    ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173', '1823 Beach Drive, 	Bellevue, Nebraska, 22341', 'Valid', 'Invalid', 'Scheduled', 4, 2),
-    ('Wulf', 'Vasquez', 'wvasquez@duelue.com', '1(555)747-5584', '01 Dutch Blv., 	Sitka, Alaska, 11112', 'Valid', 'Valid', 'Not Scheduled', 1, 4),
+    ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173', '1823 Beach Drive, Bellevue, Nebraska, 22341', 'Valid', 'Invalid', 'Scheduled', 4, 2),
+    ('Wulf', 'Vasquez', 'wvasquez@duelue.com', '1(555)747-5584', '01 Dutch Blv., Sitka, Alaska, 11112', 'Valid', 'Valid', 'Not Scheduled', 1, 4),
     ('Brunhilda', 'Walsh', 'bwalsh@duelue.com', '1(555)889-1766', '1550 Marcus 	Drive, Seattle, Washington', 'Valid', 'Valid', 'Scheduled', 6, 1),
     ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173', '1823 Beach Drive, Bellevue, Nebraska, 22341', 'Valid', 'Invalid', 'Scheduled', 2, 3),
     ('Yeska', 'Wushan', 'ywushan@duelue.com', '1(555)189-1278', '841 Valor Road, Colorado Springs, Colorado, 67673', 'Not Valid', 'Valid', 'Scheduled', NULL, 8);
