@@ -9,6 +9,7 @@ GRANT ALL PRIVILEGES ON outland_adventures.* TO 'outland_user'@'localhost';
 
 -- drop tables if they are present
 DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Address;
 DROP TABLE IF EXISTS Equipment;
 DROP TABLE IF EXISTS Trip;
 DROP TABLE IF EXISTS Employee;
@@ -45,7 +46,8 @@ CREATE TABLE Inventory (
 CREATE TABLE Employee ( 
 
     employee_id    INT  NOT NULL  AUTO_INCREMENT,
-    employee_name    VARCHAR(100)  NOT NULL,
+    employee_first_name    VARCHAR(50)  NOT NULL,
+    employee_last_name    VARCHAR(50)  NOT NULL,
     job_title    VARCHAR(50),
     employee_visa    VARCHAR(20),
     employee_passport    VARCHAR(20),
@@ -81,7 +83,7 @@ CREATE TABLE Trip (
 
 
 -- Create Equipment table
-CREATE TABLE Equipment ( 
+CREATE TABLE Equipment (
 
     equipment_id    INT  NOT NULL  AUTO_INCREMENT,
     equipment_name    VARCHAR(100)  NOT NULL,
@@ -95,6 +97,19 @@ CREATE TABLE Equipment (
     FOREIGN KEY (category)
         REFERENCES Inventory(category) 
 
+);
+
+
+-- Create Address table
+CREATE TABLE Address (
+    
+    address    VARCHAR(50)  NOT NULL,
+    city    VARCHAR(50)  NOT NULL,
+    state    VARCHAR(50)  NOT NULL,
+    zip_code    INT  NOT NULL,
+    
+    PRIMARY KEY(address)
+    
 );
 
 
@@ -114,6 +129,10 @@ CREATE TABLE Customer (
     trip_id    INT,
 
     PRIMARY KEY(customer_id),
+    
+    CONSTRAINT fk_address
+    FOREIGN KEY(address)
+        REFERENCES Address(address),
     
     CONSTRAINT fk_equipment
     FOREIGN KEY(equipment_id)
@@ -150,15 +169,15 @@ INSERT INTO Inventory (category, quantity, total_sales)
   
 
 -- Insert data into Employee table 
-INSERT INTO Employee (employee_name, job_title, employee_visa, employee_passport, employee_airfare)
+INSERT INTO Employee (employee_first_name, employee_last_name, job_title, employee_visa, employee_passport, employee_airfare)
     VALUES
-    ('Blythe Timmerson', 'Owner', 'Valid', 'Valid', 'Scheduled'),
-    ('Jim Ford', 'Owner', 'Valid', 'Valid', 'Scheduled'),
-    ('John MacNell', 'Camping Guide', 'Valid', 'Valid', 'Scheduled'),
-    ('D.B. Marland', 'Hiking Guide', 'Valid', 'Valid', 'Scheduled'),
-    ('Anita Gallegos', 'Marketing Manager', 'Valid', 'Valid', 'Not Scheduled'),
-    ('Dimitrios Stravopolous', 'Inventory Manager', 'Valid', 'Valid', 'Not Scheduled'),
-    ('Mei Wong', 'Website Manager', 'Valid', 'Valid', 'Not Scheduled');
+    ('Blythe', 'Timmerson', 'Owner', 'Valid', 'Valid', 'Scheduled'),
+    ('Jim', 'Ford', 'Owner', 'Valid', 'Valid', 'Scheduled'),
+    ('John', 'MacNell', 'Camping Guide', 'Valid', 'Valid', 'Scheduled'),
+    ('D.B.', 'Marland', 'Hiking Guide', 'Valid', 'Valid', 'Scheduled'),
+    ('Anita', 'Gallegos', 'Marketing Manager', 'Valid', 'Valid', 'Not Scheduled'),
+    ('Dimitrios', 'Stravopolous', 'Inventory Manager', 'Valid', 'Valid', 'Not Scheduled'),
+    ('Mei', 'Wong', 'Website Manager', 'Valid', 'Valid', 'Not Scheduled');
 
 
 -- Insert data into Trip table
@@ -166,39 +185,39 @@ INSERT INTO Trip (trip_type, start_date, end_date, number_of_bookings, location_
     VALUES  
     ('Camping', '2022-04-08', '2022-04-23', 12,
         (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Spring'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'MacNell'  AND job_title = 'Camping Guide')),
         
     ('Hiking', '2022-04-29', '2022-05-14', 21,
         (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Spring'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'Marland'  AND job_title = 'Hiking Guide')),
         
     ('Hiking', '2022-05-27', '2022-06-11', 25,
         (SELECT location_id FROM Location WHERE location_name = 'Europe'        AND season = 'Spring'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'Marland'  AND job_title = 'Hiking Guide')),
         
     ('Camping', '2022-09-02', '2022-09-17', 7,
         (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Fall'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'MacNell'  AND job_title = 'Camping Guide')),
         
     ('Camping', '2022-09-30', '2022-10-15', 12,
         (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Fall'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'MacNell'  AND job_title = 'Camping Guide')),
         
     ('Hiking', '2022-10-28', '2022-11-12', 17,
         (SELECT location_id FROM Location WHERE location_name = 'Europe'        AND season = 'Fall'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'Marland'  AND job_title = 'Hiking Guide')),
     
     ('Hiking', '2023-04-07', '2023-04-22', 10,
         (SELECT location_id FROM Location WHERE location_name = 'Africa'        AND season = 'Spring'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'Marland'  AND job_title = 'Hiking Guide')),
     
     ('Camping', '2023-05-05', '2023-05-20', 17,
         (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Spring'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'John MacNell'  AND job_title = 'Camping Guide')),
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'MacNell'  AND job_title = 'Camping Guide')),
         
     ('Hiking', '2023-10-02', '2023-10-17', 18,
         (SELECT location_id FROM Location WHERE location_name = 'Asia'          AND season = 'Fall'),
-        (SELECT employee_id FROM Employee WHERE employee_name = 'D.B. Marland'  AND job_title = 'Hiking Guide'));
+        (SELECT employee_id FROM Employee WHERE employee_last_name = 'Marland'  AND job_title = 'Hiking Guide'));
 
 
 -- Insert data into Equipment table  
@@ -213,14 +232,31 @@ INSERT INTO Equipment (equipment_name, type, purchase_date, category)
     ('Sleeping Bag', 'Rental', '2017-06-29', 'Sleeping Gear'); 
 
 
+-- Insert data into Address table
+INSERT INTO Address (address, city, state, zip_code)
+    VALUES
+    ('123 Blanc Ave', 'Huntsville', 'Alabama', 00000),
+    ('1823 Beach Dr', 'Bellevue', 'Nebraska', 22341),
+    ('01 Dutch Blvd', 'Sitka', 'Alaska', 11112),
+    ('1550 Marcus Dr', 'Seattle', 'Washington', 11223),
+    ('7272 Cherry ln', 'Tampa', 'Florida', 33821),
+    ('841 Valor Rd', 'Colorado Springs', 'Colorado', 67673);
+
+
 -- Insert data into Customer table
 INSERT INTO Customer (first_name, last_name, email, phone, address, visa_status, passport_status, airfare_status, equipment_id, trip_id)
     VALUES
-    ('Randy', 'Miles', 'rmiles@duelue.com', '1(555)987-6543', '123 Blanc Ave., Huntsville, Alabama, 00000', 'Valid', 'Valid', 'Scheduled', 3, 7),
-    ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173', '1823 Beach Drive, Bellevue, Nebraska, 22341', 'Valid', 'Invalid', 'Scheduled', 4, 2),
-    ('Wulf', 'Vasquez', 'wvasquez@duelue.com', '1(555)747-5584', '01 Dutch Blv., Sitka, Alaska, 11112', 'Valid', 'Valid', 'Not Scheduled', 1, 4),
-    ('Brunhilda', 'Walsh', 'bwalsh@duelue.com', '1(555)889-1766', '1550 Marcus 	Drive, Seattle, Washington', 'Valid', 'Valid', 'Scheduled', 6, 1),
-    ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173', '1823 Beach Drive, Bellevue, Nebraska, 22341', 'Valid', 'Invalid', 'Scheduled', 2, 3),
-    ('Yeska', 'Wushan', 'ywushan@duelue.com', '1(555)189-1278', '841 Valor Road, Colorado Springs, Colorado, 67673', 'Not Valid', 'Valid', 'Scheduled', NULL, 8);
+    ('Randy', 'Miles', 'rmiles@duelue.com', '1(555)987-6543',
+    (SELECT address FROM Address WHERE address = '123 Blanc Ave.'), 'Valid', 'Valid', 'Scheduled', 3, 7),
+    ('Sandy', 'Scott', 'sscot@duelue.com', '1(555)845-9173',
+    (SELECT address FROM Address WHERE address = '1823 Beach Drive'), 'Valid', 'Invalid', 'Scheduled', 4, 2),
+    ('Yenifer', 'Knight', 'yknight@duelue.com', '1(555)693-0472',
+    (SELECT address FROM Address WHERE address = '7272 Cherry ln'), 'Valid', 'Valid', 'Scheduled', 2, 3),
+    ('Wulf', 'Vasquez', 'wvasquez@duelue.com', '1(555)747-5584',
+    (SELECT address FROM Address WHERE address = '01 Dutch Blv.'), 'Valid', 'Valid', 'Not Scheduled', 1, 4),
+    ('Brunhilda', 'Walsh', 'bwalsh@duelue.com', '1(555)889-1766',
+    (SELECT address FROM Address WHERE address = '1550 Marcus Drive'), 'Valid', 'Valid', 'Scheduled', 6, 1),
+    ('Yeska', 'Wushan', 'ywushan@duelue.com', '1(555)189-1278',
+    (SELECT address FROM Address WHERE address = '841 Valor Road'), 'Not Valid', 'Valid', 'Scheduled', NULL, 8);
 
 

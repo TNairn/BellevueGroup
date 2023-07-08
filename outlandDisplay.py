@@ -31,7 +31,7 @@ try:
     cursor.execute("SELECT category, quantity, total_sales FROM Inventory")
     Inventory = cursor.fetchall()
 
-    cursor.execute("SELECT employee_id, employee_name, job_title, employee_visa, "
+    cursor.execute("SELECT employee_id, employee_first_name, employee_last_name, job_title, employee_visa, "
                    "employee_passport, employee_airfare FROM Employee")
     Employee = cursor.fetchall()
 
@@ -42,6 +42,9 @@ try:
     cursor.execute("SELECT equipment_id, equipment_name, type, purchase_date, "
                    "category FROM Equipment")
     Equipment = cursor.fetchall()
+
+    cursor.execute("SELECT address, city, state, zip_code FROM Address")
+    Address = cursor.fetchall()
 
     cursor.execute("SELECT customer_id, first_name, last_name, email, phone, "
                    "address, visa_status, passport_status, airfare_status, "
@@ -64,8 +67,8 @@ try:
     print("-- DISPLAYING Employee RECORDS --")
     for emp in Employee:
         print(
-            "Employee ID: {}\nEmployee Name: {}\nJob Title: {}\nEmployee Visa: {}\nEmployee Passport: {}\nEmployee Airfare: {}\n".format(
-                emp[0], emp[1], emp[2], emp[3], emp[4], emp[5]))
+            "Employee ID: {}\nEmployee First Name: {}\nEmployee Last Name: {}\nJob Title: {}\nEmployee Visa: {}\nEmployee Passport: {}\nEmployee Airfare: {}\n".format(
+                emp[0], emp[1], emp[2], emp[3], emp[4], emp[5], emp[6]))
 
     print("-- DISPLAYING Trip RECORDS --")
     for place in Trip:
@@ -78,6 +81,10 @@ try:
         print("Equipment ID: {}\nEquipment Name: {}\nType: {}\nPurchase Date: {}\nCategory: {}\n".format(eq[0], eq[1],
                                                                                                          eq[2], eq[3],
                                                                                                          eq[4]))
+
+    print("-- DISPLAYING Address RECORDS --")
+    for add in Address:
+        print("Address: {}\nCity: {}\nState: {}\nZip Code: {}\n".format(add[0], add[1], add[2], add[3]))
 
     print("-- DISPLAYING Customer RECORDS --")
     for cus in Customer:
