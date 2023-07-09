@@ -235,7 +235,7 @@ INSERT INTO Equipment (equipment_name, type, purchase_date, category)
 -- Insert data into Address table
 INSERT INTO Address (address, city, state, zip_code)
     VALUES
-    ('123 Blanc Ave', 'Huntsville', 'Alabama', 00000),
+    ('123 Blanc Ave', 'Huntsville', 'Alabama', 82649),
     ('1823 Beach Dr', 'Bellevue', 'Nebraska', 22341),
     ('01 Dutch Blvd', 'Sitka', 'Alaska', 11112),
     ('1550 Marcus Dr', 'Seattle', 'Washington', 11223),
