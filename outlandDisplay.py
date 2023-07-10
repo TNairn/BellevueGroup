@@ -51,8 +51,9 @@ try:
                    "equipment_id, trip_id FROM Customer")
     Customer = cursor.fetchall()
 
-    # Close the cursor
+    # Close the cursor and the connection to the database
     cursor.close()
+    db.close()
 
     # Display data in each table
     print("-- DISPLAYING Location RECORDS --")
@@ -99,5 +100,3 @@ except mysql.connector.Error as err:
         print("The specified database does not exist")
     else:
         print(err)
-finally:
-    db.close()
